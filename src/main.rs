@@ -8,10 +8,11 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
     let mut data = [0 as u8; 1];
 
     // set timeouts
-    stream1.set_read_timeout(Some(Duration::new(60, 0)));
-    stream2.set_read_timeout(Some(Duration::new(60, 0)));
-    stream1.set_write_timeout(Some(Duration::new(20, 0)));
-    stream2.set_write_timeout(Some(Duration::new(20, 0)));
+    // TODO: add error checking in case timeouts are not supported
+    stream1.set_read_timeout(Some(Duration::new(60, 0))).unwrap();
+    stream2.set_read_timeout(Some(Duration::new(60, 0))).unwrap();
+    stream1.set_write_timeout(Some(Duration::new(20, 0))).unwrap();
+    stream2.set_write_timeout(Some(Duration::new(20, 0))).unwrap();
 
     // let the clients know which one is 'player 1'
     stream1.write(b"1").unwrap();
