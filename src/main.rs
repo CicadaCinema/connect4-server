@@ -18,11 +18,22 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
     stream1.write(b"1").unwrap();
     stream2.write(b"2").unwrap();
 
-    // TODO: reduce number of lined by removing repeated code? this isn't a very high priority...
+    // TODO: reduce number of lines by removing repeated code? this isn't a very high priority...
     loop {
         match stream1.read(&mut data) {
             Ok(size) => {
-                stream2.write(&data[0..size]).unwrap();
+                let mut data_to_send: [u8; 3] = [0; 3];
+                for i in 0..3 {
+                    data_to_send[i] = 2;
+                }
+
+                // TODO: do some logic here before relaying command
+
+                // pass the instructions to both clients
+                stream1.write(&data_to_send).unwrap();
+                stream2.write(&data_to_send).unwrap();
+
+                // clear (received) data buffer
                 data = [0 as u8; 1];
             },
             Err(_) => {
@@ -34,7 +45,18 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
         }
         match stream2.read(&mut data) {
             Ok(size) => {
-                stream1.write(&data[0..size]).unwrap();
+                let mut data_to_send: [u8; 3] = [0; 3];
+                for i in 0..3 {
+                    data_to_send[i] = 2;
+                }
+
+                // TODO: do some logic here before relaying command
+
+                // pass the instructions to both clients
+                stream1.write(&data_to_send).unwrap();
+                stream2.write(&data_to_send).unwrap();
+
+                // clear (received) data buffer
                 data = [0 as u8; 1];
             },
             Err(_) => {
