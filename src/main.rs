@@ -4,65 +4,54 @@ use std::io::{Read, Write};
 use std::time::Duration;
 
 fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
+    let mut streams = [stream1, stream2];
+
     // using 1 byte buffer
     let mut received_data = [0 as u8; 1];
 
     // the height of each of the columns
-    let mut columns_height = [0 as u8; 7];
+    let mut free_cells_in_column = [6 as u8; 7];
 
-    // set timeouts
-    // TODO: add error checking in case timeouts are not supported
-    stream1.set_read_timeout(Some(Duration::new(60, 0))).unwrap();
-    stream2.set_read_timeout(Some(Duration::new(60, 0))).unwrap();
-    stream1.set_write_timeout(Some(Duration::new(20, 0))).unwrap();
-    stream2.set_write_timeout(Some(Duration::new(20, 0))).unwrap();
+    for stream_id in 0..2 {
+        // TODO: add error checking in case timeouts are not supported
+        // set timeouts
+        streams[stream_id].set_read_timeout(Some(Duration::new(60, 0))).unwrap();
+        streams[stream_id].set_write_timeout(Some(Duration::new(20, 0))).unwrap();
+    }
 
     // let the clients know which one is 'player 1'
-    stream1.write(b"1").unwrap();
-    stream2.write(b"2").unwrap();
+    streams[0].write(b"1").unwrap();
+    streams[1].write(b"2").unwrap();
 
-    // TODO: reduce number of lines by removing repeated code? this isn't a very high priority...
     loop {
-        match stream1.read(&mut received_data) {
-            Ok(size) => {
-                let mut data_to_send = [0 as u8; 3];
-                data_to_send[2] = 1;
+        for current_stream_id in 0..2 {
+            match streams[current_stream_id].read(&mut received_data) {
+                Ok(size) => {
+                    let mut data_to_send = [0 as u8; 3];
 
-                // TODO: do some logic here before relaying command
+                    // set colour of cell
+                    data_to_send[2] = current_stream_id as u8 + 1;
 
-                // pass the instructions to both clients
-                stream1.write(&data_to_send).unwrap();
-                stream2.write(&data_to_send).unwrap();
+                    // find indexes of new cell
+                    free_cells_in_column[received_data[0] as usize] -= 1;
+                    data_to_send[0] = free_cells_in_column[received_data[0] as usize];
+                    data_to_send[1] = received_data[0];
 
-                // clear received data buffer
-                received_data = [0 as u8; 1];
-            },
-            Err(_) => {
-                //println!("An error occurred or the stream timed out, terminating connection with {}", stream1.peer_addr().unwrap());
-                stream1.shutdown(Shutdown::Both).unwrap();
-                stream2.shutdown(Shutdown::Both).unwrap();
-                break;
-            }
-        }
-        match stream2.read(&mut received_data) {
-            Ok(size) => {
-                let mut data_to_send = [0 as u8; 3];
-                data_to_send[2] = 2;
+                    // TODO: implement win condition
 
-                // TODO: do some logic here before relaying command
+                    // pass the instructions to both clients
+                    streams[0].write(&data_to_send).unwrap();
+                    streams[1].write(&data_to_send).unwrap();
 
-                // pass the instructions to both clients
-                stream1.write(&data_to_send).unwrap();
-                stream2.write(&data_to_send).unwrap();
-
-                // clear received data buffer
-                received_data = [0 as u8; 1];
-            },
-            Err(_) => {
-                //println!("An error occurred or the stream timed out, terminating connection with {}", stream2.peer_addr().unwrap());
-                stream1.shutdown(Shutdown::Both).unwrap();
-                stream2.shutdown(Shutdown::Both).unwrap();
-                break;
+                    // clear received data buffer
+                    received_data = [0 as u8; 1];
+                },
+                Err(_) => {
+                    //println!("An error occurred or the stream timed out, terminating connection with {}", stream1.peer_addr().unwrap());
+                    streams[0].shutdown(Shutdown::Both).unwrap();
+                    streams[1].shutdown(Shutdown::Both).unwrap();
+                    break;
+                }
             }
         }
     }
