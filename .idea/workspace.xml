@@ -63,13 +63,14 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="clean up messy code&#10;some quality-of life improvements too...&#10;now, player 1 is the client which connected first" />
     <MESSAGE value="panic if timeouts aren't supported" />
-    <option name="LAST_COMMIT_MESSAGE" value="panic if timeouts aren't supported" />
+    <MESSAGE value="instead of echoing back the received data, send a three-byte long instruction to both clients for every move&#10;this instruction is a placeholder for now, but it is acted upon by the clients to change one cell (x and y coordinates are determined by the first two bytes) to a specified colour (determined by the third byte)&#10;additionally, the transmitted bytes are direct representations of the data instead of needing to be parsed as strings first" />
+    <option name="LAST_COMMIT_MESSAGE" value="instead of echoing back the received data, send a three-byte long instruction to both clients for every move&#10;this instruction is a placeholder for now, but it is acted upon by the clients to change one cell (x and y coordinates are determined by the first two bytes) to a specified colour (determined by the third byte)&#10;additionally, the transmitted bytes are direct representations of the data instead of needing to be parsed as strings first" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="212" y="105" width="855" height="845" key="CommitChangelistDialog2" timestamp="1605392756074">
+    <state x="212" y="105" width="855" height="845" key="CommitChangelistDialog2" timestamp="1605458624836">
       <screen x="0" y="0" width="3200" height="1080" />
     </state>
-    <state x="212" y="105" width="855" height="845" key="CommitChangelistDialog2/0.0.3200.1080@0.0.3200.1080" timestamp="1605392756074" />
+    <state x="212" y="105" width="855" height="845" key="CommitChangelistDialog2/0.0.3200.1080@0.0.3200.1080" timestamp="1605458624836" />
     <state x="331" y="392" width="660" height="204" key="Github.ShareDialog" timestamp="1605378612229">
       <screen x="0" y="0" width="3200" height="1080" />
     </state>

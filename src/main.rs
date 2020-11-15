@@ -5,7 +5,10 @@ use std::time::Duration;
 
 fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
     // using 1 byte buffer
-    let mut data = [0 as u8; 1];
+    let mut received_data = [0 as u8; 1];
+
+    // the height of each of the columns
+    let mut columns_height = [0 as u8; 7];
 
     // set timeouts
     // TODO: add error checking in case timeouts are not supported
@@ -20,12 +23,10 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
 
     // TODO: reduce number of lines by removing repeated code? this isn't a very high priority...
     loop {
-        match stream1.read(&mut data) {
+        match stream1.read(&mut received_data) {
             Ok(size) => {
-                let mut data_to_send: [u8; 3] = [0; 3];
-                for i in 0..3 {
-                    data_to_send[i] = 2;
-                }
+                let mut data_to_send = [0 as u8; 3];
+                data_to_send[2] = 1;
 
                 // TODO: do some logic here before relaying command
 
@@ -33,8 +34,8 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
                 stream1.write(&data_to_send).unwrap();
                 stream2.write(&data_to_send).unwrap();
 
-                // clear (received) data buffer
-                data = [0 as u8; 1];
+                // clear received data buffer
+                received_data = [0 as u8; 1];
             },
             Err(_) => {
                 //println!("An error occurred or the stream timed out, terminating connection with {}", stream1.peer_addr().unwrap());
@@ -43,12 +44,10 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
                 break;
             }
         }
-        match stream2.read(&mut data) {
+        match stream2.read(&mut received_data) {
             Ok(size) => {
-                let mut data_to_send: [u8; 3] = [0; 3];
-                for i in 0..3 {
-                    data_to_send[i] = 2;
-                }
+                let mut data_to_send = [0 as u8; 3];
+                data_to_send[2] = 2;
 
                 // TODO: do some logic here before relaying command
 
@@ -56,8 +55,8 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
                 stream1.write(&data_to_send).unwrap();
                 stream2.write(&data_to_send).unwrap();
 
-                // clear (received) data buffer
-                data = [0 as u8; 1];
+                // clear received data buffer
+                received_data = [0 as u8; 1];
             },
             Err(_) => {
                 //println!("An error occurred or the stream timed out, terminating connection with {}", stream2.peer_addr().unwrap());
