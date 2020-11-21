@@ -30,6 +30,13 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
         for current_stream_id in 0..2 {
             match streams[current_stream_id].read(&mut received_data) {
                 Ok(size) => {
+                    // panic if we see a dead client
+                    if received_data[0] == 0 {
+                        panic!();
+                    }
+                    // otherwise, subtract 1 from the column int (1 was added in the client)
+                    received_data[0] -= 1;
+
                     let mut data_to_send = [0 as u8; 3];
 
                     // set colour of cell
