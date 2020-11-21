@@ -12,6 +12,9 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
     // the height of each of the columns
     let mut free_cells_in_column = [6 as u8; 7];
 
+    // the state of the game board
+    let mut state = [[0; 7]; 6];
+
     for stream_id in 0..2 {
         // TODO: add error checking in case timeouts are not supported
         // set timeouts
@@ -37,11 +40,14 @@ fn handle_two_clients(mut stream1: TcpStream, mut stream2: TcpStream) {
                     data_to_send[0] = free_cells_in_column[received_data[0] as usize];
                     data_to_send[1] = received_data[0];
 
-                    // TODO: implement win condition
-
                     // pass the instructions to both clients
                     streams[0].write(&data_to_send).unwrap();
                     streams[1].write(&data_to_send).unwrap();
+
+                    // write the same instruction to the state
+                    state[data_to_send[0] as usize][data_to_send[1] as usize] = data_to_send[2];
+
+                    // TODO: implement win condition HERE
 
                     // clear received data buffer
                     received_data = [0 as u8; 1];
