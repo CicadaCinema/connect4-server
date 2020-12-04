@@ -54,11 +54,6 @@
         <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="RustProjectSettings">
     <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
@@ -72,14 +67,15 @@
     <MESSAGE value="all networking communication is done through bytes (nothing, except the initial player assignment) is done through strings)&#10;additionally, a move is only sent to the server when any of the squares are clicked (if it is a valid move); instead of a placeholder, a byte representing the clicked column is sent over" />
     <MESSAGE value="add connect-4 backend code&#10;server calculates colour and coords of the cell requested by one of the clients" />
     <MESSAGE value="Add client-side validation to prevent column overflow&#10;Also make server store the game state (useful for checking win condition)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add client-side validation to prevent column overflow&#10;Also make server store the game state (useful for checking win condition)" />
+    <MESSAGE value="enable server to know when a client is dead by adding one to the column int&#10;previously, the message [0] was ambiguous: dead clients also sent this upon being closed" />
+    <option name="LAST_COMMIT_MESSAGE" value="enable server to know when a client is dead by adding one to the column int&#10;previously, the message [0] was ambiguous: dead clients also sent this upon being closed" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="85" y="100" width="1003" height="802" key="CommitChangelistDialog2" timestamp="1605962529899">
+    <state x="85" y="100" width="1003" height="802" key="CommitChangelistDialog2" timestamp="1605990493587">
       <screen x="0" y="0" width="1280" height="1024" />
     </state>
     <state x="212" y="105" width="855" height="845" key="CommitChangelistDialog2/0.0.3200.1080@0.0.3200.1080" timestamp="1605467017575" />
-    <state x="85" y="100" width="1003" height="802" key="CommitChangelistDialog2/1280.0.1920.1080/0.0.1280.1024@0.0.1280.1024" timestamp="1605962529899" />
+    <state x="85" y="100" width="1003" height="802" key="CommitChangelistDialog2/1280.0.1920.1080/0.0.1280.1024@0.0.1280.1024" timestamp="1605990493587" />
     <state x="331" y="392" width="660" height="204" key="Github.ShareDialog" timestamp="1605378612229">
       <screen x="0" y="0" width="3200" height="1080" />
     </state>
